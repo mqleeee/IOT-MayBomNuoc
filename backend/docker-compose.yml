@@ -1,0 +1,40 @@
+version: '3.4'
+
+services:
+  db:
+    image: mysql
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: Quangdeptrai123
+      MYSQL_DATABASE: mydatabase
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_db-data:/var/lib/mysql
+    networks:
+      - network-mysql-api
+
+  backend:
+    depends_on:
+      - db
+    networks:
+      - network-mysql-api
+    image: backend
+    container_name: cntt3-api
+    build:
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: Quangdeptrai123
+      DB_NAME: mydatabase 
+      DB_PORT: 3306
+    ports:
+      - "3003:3002"
+
+volumes:
+  mysql_db-data:
+
+networks:
+  network-mysql-api:
